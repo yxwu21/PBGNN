@@ -1,4 +1,4 @@
-# ❇️ PBGNN: Data-Driven Reaction Field Energy Modeling by Geometric Graph Neural Network
+# ❇️ PBGNN: End-to-End Modeling of Reaction Field Energy Using Data-Driven Geometric Graph Neural Networkss
 
 ![](assets/overview.jpg)
 
