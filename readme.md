@@ -15,8 +15,6 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 ## Datasets
 
-### Preprocessed Data
-
 To enable better reproducibility, we have provided preprocessed data files for the AMBER/PBSA and PBSMALL datasets. You can access the preprocessed datasets via [Zenodo](https://doi.org/10.5281/zenodo.15867553).
 
 ## Training and Testing
