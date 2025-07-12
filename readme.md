@@ -48,7 +48,7 @@ python -m scripts.3d.prepare_3d_energy_sparse_dataset amber_pbsa_epb_sparse_dats
 
 ### Preprocessed Data
 
-To enable better reproducibility, we have provided preprocessed data files for the AMBER/PBSA and PBSMALL datasets. You can access the preprocessed datasets via [Zenodo](https://doi.org/10.5281/zenodo.15620599).
+To enable better reproducibility, we have provided preprocessed data files for the AMBER/PBSA and PBSMALL datasets. You can access the preprocessed datasets via [Zenodo](https://doi.org/10.5281/zenodo.15867553).
 
 ## Training and Testing
 
