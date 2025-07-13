@@ -9,8 +9,9 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 ### Requirements
 
-- Python>=3.9
-- Install `pbgnn` package via `pip install -e .`
+- Python >= 3.9
+- Install the `pbgnn` package via `pip install -e .`
+- Set up the `wandb` and `slurm` fields in the `env.toml` file
 
 ## Datasets
 
