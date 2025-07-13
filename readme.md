@@ -10,6 +10,7 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 ### Requirements
 
 - Python >= 3.9
+- Install the `slurm` plugin via `pip install wheel/nntool-1.6.2-py3-none-any.whl`
 - Install the `pbgnn` package via `pip install -e .`
 - Set up the `wandb` and `slurm` fields in the `env.toml` file
 
