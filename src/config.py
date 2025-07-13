@@ -19,10 +19,10 @@ class WandbConfig:
     name: str
 
     # project name in wandb
-    project: str = "epb-surface"
+    project: str = "pbgnn"
 
     # wandb user name
-    entity: str = "junhaoliu17"
+    entity: str = ""
 
     # wandb api key
     api_key: str = ""

@@ -9,9 +9,8 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 ### Requirements
 
-- Python == 3.9
-- PyTorch>=1.12.1
-- Packages `pip install -r requirements.txt`
+- Python>=3.9
+- Install `pbgnn` package via `pip install -e .`
 
 ## Datasets
 
