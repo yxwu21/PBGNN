@@ -32,5 +32,11 @@ sh scripts/3d/bash/test.sh
 One is able to modify the predefined configurations by running
 
 ```bash
-python -m scripts.3d.train_3d_energy_distributed distributed_atomic_all_atoms_grid35_all_in_one_with_lset_fully_coverage_medium_dataloader -h
+python -m scripts.3d.train_3d_energy_distributed amber_pbsa -h
+```
+
+All arguments can be overrided by passing new argument values, for example,
+
+```bash
+python -m scripts.3d.train_3d_energy_distributed amber_pbsa --trainer.train-dataset-extra-config.neighbor-list-cutoff 15 --trainer.eval-dataset-extra-config.neighbor-list-cutoff 15 --trainer.train-num-steps 32000
 ```

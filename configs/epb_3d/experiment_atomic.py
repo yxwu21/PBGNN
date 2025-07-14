@@ -5,36 +5,36 @@ from . import trainer_atomic
 from . import misc
 
 experiments = dict(
-    # small molecule with lset and neighbor list processed by dataloader
-    distributed_atomic_all_atoms_grid35_small_mol_wo_lset_fully_coverage_medium_dataloader=ExperimentConfig(
+    # pbsmall
+    pbsmall=ExperimentConfig(
         model_cls="atomic_based",
-        atomic_energy_model=model_atomic.model_small,
-        trainer=trainer_atomic.distributed_atomic_model_grid35_all_atoms_sparse_small_mol_fusion_fully_coverage_trainer_medium,
+        atomic_energy_model=model_atomic.bndy_fusion_model_small,
+        trainer=trainer_atomic.pbsmall_atomic_trainer,
         wandb=misc.wandb,
         slurm=misc.distributed_slurm,
     ),
-    debug_distributed_atomic_all_atoms_grid35_small_mol_wo_lset_fully_coverage_medium_dataloader=ExperimentConfig(
+    debug_pbsmall=ExperimentConfig(
         model_cls="atomic_based",
-        atomic_energy_model=model_atomic.model_small,
+        atomic_energy_model=model_atomic.bndy_fusion_model_small,
         trainer=replace(
-            trainer_atomic.distributed_atomic_model_grid35_all_atoms_sparse_small_mol_fusion_fully_coverage_trainer_medium,
+            trainer_atomic.pbsmall_atomic_trainer,
             eval_batch_size=1,
         ),
         wandb=misc.wandb,
         slurm=misc.debug_slurm,
     ),
-    # all in one with lset and neighbor list processed by dataloader
-    distributed_atomic_all_atoms_grid35_all_in_one_wo_lset_fully_coverage_medium_dataloader=ExperimentConfig(
+    # amber_pbsa
+    amber_pbsa=ExperimentConfig(
         model_cls="atomic_based",
         atomic_energy_model=model_atomic.model_medium,
-        trainer=trainer_atomic.distributed_atomic_model_grid35_all_atoms_sparse_all_in_one_fusion_fully_coverage_trainer_medium,
+        trainer=trainer_atomic.amber_pbsa_atomic_trainer,
         wandb=misc.wandb,
         slurm=misc.distributed_slurm,
     ),
-    distributed_atomic_all_atoms_grid35_all_in_one_with_lset_fully_coverage_medium_dataloader=ExperimentConfig(
+    debug_amber_pbsa=ExperimentConfig(
         model_cls="atomic_based",
         atomic_energy_model=model_atomic.fusion_model_medium,
-        trainer=trainer_atomic.distributed_atomic_model_grid35_all_atoms_sparse_all_in_one_fusion_fully_coverage_trainer_medium,
+        trainer=trainer_atomic.amber_pbsa_atomic_trainer,
         wandb=misc.wandb,
         slurm=misc.distributed_slurm,
     ),

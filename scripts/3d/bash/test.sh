@@ -1,7 +1,7 @@
 date_time=$(python -c "from nntool.utils import get_current_time; print(get_current_time())")
 export OUTPUT_PATH=outputs/test_3d_energy_atomic/$date_time
 
-python -m scripts.3d.test_3d_energy_distributed distributed_atomic_all_atoms_grid35_all_in_one_wo_lset_fully_coverage_medium_dataloader \
+python -m scripts.3d.test_3d_energy_distributed amber_pbsa \
     --model-ckpt-path outputs/train_3d_energy_atomic/10272024/223858/models/model_79/model.safetensors \
     --trainer.train-dataset-extra-config.neighbor-list-cutoff 15 \
     --trainer.eval-dataset-extra-config.neighbor-list-cutoff 15 \
