@@ -19,7 +19,6 @@ conda create -n pbgnn python=3.9
 
 ### Requirements
 
-- Python >= 3.9
 - Make sure you are in the newly created enviroment `conda activate pbgnn`
 - Install the `slurm` plugin via `pip install wheel/nntool-1.6.2-py3-none-any.whl`
 - Install the `pbgnn` package via `pip install -e .`
