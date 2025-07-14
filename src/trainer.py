@@ -135,9 +135,7 @@ class Trainer:
                     self.logger.info(f"{k}: {v}")
                     self.writer.add_scalar(f"train/eval_{k}", v, epoch)
 
-                torch.save(
-                    self.model.state_dict(), f"{self.args.ckpt_dir}/model_{epoch}.pth"
-                )
+                torch.save(self.model.state_dict(), f"{self.args.ckpt_dir}/model_{epoch}.pth")
 
         # save the final model after training
         torch.save(self.model.state_dict(), f"{self.args.ckpt_dir}/model_final.pth")
@@ -158,9 +156,7 @@ class Trainer:
         positive_mask = torch.logical_and(mask == 1, torch.logical_not(negative_mask))
         regr_loss_fn = MSELoss(reduction="none")
         regr_loss_tn = regr_loss_fn(pred, label)
-        weighted_regr_loss_tn = (
-            regr_loss_tn * 0.5 * negative_mask + regr_loss_tn * positive_mask
-        )
+        weighted_regr_loss_tn = regr_loss_tn * 0.5 * negative_mask + regr_loss_tn * positive_mask
         regr_loss = torch.mean(torch.masked_select(weighted_regr_loss_tn, mask == 1))
         # sign_loss_fn = PerceptronLoss(self.args.sign_threshold)
         # sign_loss = sign_loss_fn(pred, label)
@@ -396,9 +392,7 @@ class EPBSurfaceTrainer(BaseTrainer):
 
         # model settings
         self.model = model.to(self.device)
-        self.opt = Adam(
-            self.model.parameters(), lr=args.train_lr, betas=args.adam_betas
-        )
+        self.opt = Adam(self.model.parameters(), lr=args.train_lr, betas=args.adam_betas)
 
         # step counter state
         self.step = 0
@@ -423,9 +417,7 @@ class EPBSurfaceTrainer(BaseTrainer):
         lengths[-1] = len(dataset) - sum(lengths[:-1])
 
         generator = torch.Generator().manual_seed(self.seed)
-        train_dataset, eval_dataset, test_dataset = random_split(
-            dataset, lengths, generator
-        )
+        train_dataset, eval_dataset, test_dataset = random_split(dataset, lengths, generator)
         return sign_threshold, train_dataset, eval_dataset, test_dataset
 
     def get_state(self):
@@ -519,9 +511,7 @@ class EPBSurfaceTrainer(BaseTrainer):
         positive_mask = torch.logical_and(mask == 1, torch.logical_not(negative_mask))
         regr_loss_fn = MSELoss(reduction="none")
         regr_loss_tn = regr_loss_fn(pred, label)
-        weighted_regr_loss_tn = (
-            regr_loss_tn * 0.5 * negative_mask + regr_loss_tn * positive_mask
-        )
+        weighted_regr_loss_tn = regr_loss_tn * 0.5 * negative_mask + regr_loss_tn * positive_mask
         regr_loss = torch.mean(torch.masked_select(weighted_regr_loss_tn, mask == 1))
 
         if self.use_perceptron_loss:
@@ -701,9 +691,7 @@ class EPB3dSurfaceTrainer(EPBSurfaceTrainer):
         lengths[-1] = len(dataset) - sum(lengths[:-1])
 
         generator = torch.Generator().manual_seed(self.seed)
-        train_dataset, eval_dataset, test_dataset = random_split(
-            dataset, lengths, generator
-        )
+        train_dataset, eval_dataset, test_dataset = random_split(dataset, lengths, generator)
         return sign_threshold, train_dataset, eval_dataset, test_dataset
 
 
@@ -867,6 +855,9 @@ class EPB3dEnergyTrainerConfig(EPBSurfaceTrainerConfig):
     # do specific scaling grid size at random scaling
     given_grid_scaling_size: Union[float, None] = None
 
+    # provided data split json path
+    data_split_json_path: Union[str, None] = None
+
     # extra config for voxel image 3d energy dataset
     train_dataset_extra_config: VoxelImage3dEnergyDatasetExtraConfig = field(
         default_factory=VoxelImage3dEnergyDatasetExtraConfig
@@ -940,9 +931,7 @@ class EPB3dEnergyTrainer(BaseTrainer):
 
         # model settings
         self.model = model.to(self.device)
-        self.opt = Adam(
-            self.model.parameters(), lr=args.train_lr, betas=args.adam_betas
-        )
+        self.opt = Adam(self.model.parameters(), lr=args.train_lr, betas=args.adam_betas)
         if args.final_train_lr is not None:
             gamma = pow(args.final_train_lr / args.train_lr, 1 / args.train_num_steps)
             self.lr_scheduler = StepLR(self.opt, step_size=1, gamma=gamma)
@@ -972,9 +961,7 @@ class EPB3dEnergyTrainer(BaseTrainer):
         lengths[-1] = len(dataset) - sum(lengths[:-1])
 
         generator = torch.Generator().manual_seed(self.seed)
-        train_dataset, eval_dataset, test_dataset = random_split(
-            dataset, lengths, generator
-        )
+        train_dataset, eval_dataset, test_dataset = random_split(dataset, lengths, generator)
 
         collate_fn = None
         return train_dataset, eval_dataset, test_dataset, collate_fn
@@ -1020,9 +1007,7 @@ class EPB3dEnergyTrainer(BaseTrainer):
             mae_loss = L1Loss(reduction="none")
             mae_per_mol = mae_loss(y_pred, y_true)
             score["absolute_mae_per_atom"] = (mae_per_mol / atom_num).mean().item()
-            score["mape_per_atom"] = (
-                (mae_per_mol / torch.abs(y_true) / atom_num).mean().item()
-            )
+            score["mape_per_atom"] = (mae_per_mol / torch.abs(y_true) / atom_num).mean().item()
         return score
 
     @torch.no_grad()
@@ -1056,9 +1041,7 @@ class EPB3dEnergyTrainer(BaseTrainer):
             potential = potential.to(self.device)
             grid_space = grid_space.to(self.device)
 
-            pred_epb = self.model(
-                level_set, atom_charge, atom_type, atom_mask, grid_space
-            )
+            pred_epb = self.model(level_set, atom_charge, atom_type, atom_mask, grid_space)
             epb_label = self.model.compute_patch_epb(atom_charge, atom_mask, potential)
 
             y_pred_epb_list.append(pred_epb.cpu())
@@ -1114,12 +1097,8 @@ class EPB3dEnergyTrainer(BaseTrainer):
                 potential = potential.to(self.device)
                 grid_space = grid_space.to(self.device)
 
-                pred_epb = self.model(
-                    level_set, atom_charge, atom_type, atom_mask, grid_space
-                )
-                loss, loss_dict = self.compute_loss(
-                    pred_epb, atom_charge, atom_mask, potential
-                )
+                pred_epb = self.model(level_set, atom_charge, atom_type, atom_mask, grid_space)
+                loss, loss_dict = self.compute_loss(pred_epb, atom_charge, atom_mask, potential)
 
                 loss.backward()
                 self.opt.step()
@@ -1190,12 +1169,8 @@ class Bf16EPB3dEnergyTrainer(EPB3dEnergyTrainer):
                 with torch.autocast(
                     device_type="cuda" if self.use_cuda else "cpu", dtype=torch.bfloat16
                 ):
-                    pred_epb = self.model(
-                        level_set, atom_charge, atom_type, atom_mask, grid_space
-                    )
-                    loss, loss_dict = self.compute_loss(
-                        pred_epb, atom_charge, atom_mask, potential
-                    )
+                    pred_epb = self.model(level_set, atom_charge, atom_type, atom_mask, grid_space)
+                    loss, loss_dict = self.compute_loss(pred_epb, atom_charge, atom_mask, potential)
 
                 self.scaler.scale(loss).backward()
                 self.scaler.step(self.opt)
@@ -1243,9 +1218,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
             shuffle=True,
             num_workers=self.dataloader_worker,
             collate_fn=self.collate_fn,
-            generator=torch.Generator().manual_seed(
-                self.seed + self.accelerator.process_index
-            ),
+            generator=torch.Generator().manual_seed(self.seed + self.accelerator.process_index),
         )
 
         # set eval and test dataloader with worker num 1 if using fully coverage sparse dataset
@@ -1255,8 +1228,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
             shuffle=False,
             num_workers=(
                 1
-                if args.use_full_coverage_sparse_dataset
-                and not args.use_atomic_sparse_dataset
+                if args.use_full_coverage_sparse_dataset and not args.use_atomic_sparse_dataset
                 else self.dataloader_worker
             ),
             collate_fn=self.collate_fn,
@@ -1267,8 +1239,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
             shuffle=False,
             num_workers=(
                 1
-                if args.use_full_coverage_sparse_dataset
-                and not args.use_atomic_sparse_dataset
+                if args.use_full_coverage_sparse_dataset and not args.use_atomic_sparse_dataset
                 else self.dataloader_worker
             ),
             collate_fn=self.collate_fn,
@@ -1276,9 +1247,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
 
         # model settings
         self.model = model
-        self.opt = Adam(
-            self.model.parameters(), lr=args.train_lr, betas=args.adam_betas
-        )
+        self.opt = Adam(self.model.parameters(), lr=args.train_lr, betas=args.adam_betas)
         if args.final_train_lr is not None:
             gamma = pow(args.final_train_lr / args.train_lr, 1 / args.train_num_steps)
             self.lr_scheduler = StepLR(self.opt, step_size=1, gamma=gamma)
@@ -1317,9 +1286,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
         super().save(milestone)
 
         # save model
-        self.accelerator.save_model(
-            self.model, f"{self.output_folder}/models/model_{milestone}"
-        )
+        self.accelerator.save_model(self.model, f"{self.output_folder}/models/model_{milestone}")
 
     def load_state(self, state):
         self.step = state["step"]
@@ -1384,12 +1351,8 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
             grid_space = grid_space.to(self.device)
 
             with self.accelerator.autocast():
-                pred_epb = self.model(
-                    level_set, atom_charge, atom_type, atom_mask, grid_space
-                )
-            epb_label = unwrapped_model.compute_patch_epb(
-                atom_charge, atom_mask, potential
-            )
+                pred_epb = self.model(level_set, atom_charge, atom_type, atom_mask, grid_space)
+            epb_label = unwrapped_model.compute_patch_epb(atom_charge, atom_mask, potential)
 
             # Synchronize predictions across processes
             # need to truncate with the sample number, since `gather` will Accelerate will add samples to make sure each
@@ -1418,9 +1381,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
         output = {}
         return eval_score, output
 
-    def compute_loss(
-        self, pred_epb, atom_charge, atom_mask, potential, pred_per_epb=None
-    ):
+    def compute_loss(self, pred_epb, atom_charge, atom_mask, potential, pred_per_epb=None):
         unwrapped_model = self.accelerator.unwrap_model(self.model)
         if unwrapped_model.is_atom_wise_potential_trained:
             if pred_per_epb is None:
@@ -1431,16 +1392,12 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
             per_epb_loss = epb_criterion(pred_per_epb, potential)
             atom_bool_mask = atom_mask > 0
             epb_loss = (
-                torch.sum(
-                    per_epb_loss * torch.abs(atom_charge) * atom_bool_mask.float()
-                )
+                torch.sum(per_epb_loss * torch.abs(atom_charge) * atom_bool_mask.float())
                 / atom_mask.sum()
             )
         else:
             epb_criterion = nn.L1Loss()
-            epb_label = unwrapped_model.compute_patch_epb(
-                atom_charge, atom_mask, potential
-            )
+            epb_label = unwrapped_model.compute_patch_epb(atom_charge, atom_mask, potential)
             epb_loss = epb_criterion(pred_epb, epb_label)
 
         loss = epb_loss
@@ -1506,9 +1463,7 @@ class AccelerateEPB3dEnergyTrainer(EPB3dEnergyTrainer):
                 if (accum_step + 1) % self.gradient_accumulation_steps == 0:
                     pbar.set_description(f"loss: {loss.item():.4f}")
                     self.log(loss_dict, section="train")
-                    if self.step != 0 and divisible_by(
-                        self.step, self.save_and_eval_every
-                    ):
+                    if self.step != 0 and divisible_by(self.step, self.save_and_eval_every):
                         scores, _ = self.eval_during_training()
                         self.log(scores, section="eval")
                         self.accelerator.print("eval score:", scores)
@@ -1559,9 +1514,7 @@ class Bf16VoxelEPB3dEnergyTrainer(Bf16EPB3dEnergyTrainer):
         lengths[-1] = len(dataset) - sum(lengths[:-1])
 
         generator = torch.Generator().manual_seed(self.seed)
-        train_dataset, eval_dataset, test_dataset = random_split(
-            dataset, lengths, generator
-        )
+        train_dataset, eval_dataset, test_dataset = random_split(dataset, lengths, generator)
 
         collate_fn = None
         return train_dataset, eval_dataset, test_dataset, collate_fn
@@ -1593,9 +1546,7 @@ class AccelerateVoxelEPB3dEnergyTrainer(AccelerateEPB3dEnergyTrainer):
                 "When using full coverage sparse dataset for evaluation, eval_batch_size must be equal to the number of processes."
             )
 
-        super().__init__(
-            accelerator, model, seed, args=args, has_wandb_writer=has_wandb_writer
-        )
+        super().__init__(accelerator, model, seed, args=args, has_wandb_writer=has_wandb_writer)
 
     @torch.inference_mode()
     def __eval_full_converate_on_one_smaple(
@@ -1647,12 +1598,8 @@ class AccelerateVoxelEPB3dEnergyTrainer(AccelerateEPB3dEnergyTrainer):
         ):
             # print(grid_space.shape)
             with self.accelerator.autocast():
-                pred_epb = self.model(
-                    level_set, atom_charge, atom_type, atom_mask, grid_space
-                )
-            epb_label = unwrapped_model.compute_patch_epb(
-                atom_charge, atom_mask, potential
-            )
+                pred_epb = self.model(level_set, atom_charge, atom_type, atom_mask, grid_space)
+            epb_label = unwrapped_model.compute_patch_epb(atom_charge, atom_mask, potential)
             pred_epb_list.append(pred_epb)
             epb_label_list.append(epb_label)
             atom_num += atom_mask.sum().item()
@@ -1705,10 +1652,8 @@ class AccelerateVoxelEPB3dEnergyTrainer(AccelerateEPB3dEnergyTrainer):
                 # Synchronize predictions across processes
                 # need to truncate with the sample number, since `gather` will Accelerate will add samples to make sure each
                 # process gets the same batch size. See: https://github.com/huggingface/accelerate/blob/main/examples/by_feature/multi_process_metrics.py
-                pred_epb, epb_label, execution_time, total_atom_num = (
-                    self.accelerator.gather(
-                        (pred_epb, epb_label, execution_time, total_atom_num)
-                    )
+                pred_epb, epb_label, execution_time, total_atom_num = self.accelerator.gather(
+                    (pred_epb, epb_label, execution_time, total_atom_num)
                 )
 
                 # Then see if we're on the last batch of our eval dataloader
@@ -1750,96 +1695,96 @@ class AccelerateVoxelEPB3dEnergyTrainer(AccelerateEPB3dEnergyTrainer):
         else:
             return super().eval(dataloader)
 
-    def split_or_read_pkls(
-        self, dataset_path: str, split_proportions: Tuple[float, float, float]
-    ):
-        split_path = f"{self.output_folder}/data_split.json"
-        pattern = "_raw.pkl.gz" if not self.use_sparse_dataset else "_sparse.pkl.gz"
-        with self.accelerator.main_process_first():
-            if not os.path.exists(split_path):
-                generator = torch.Generator().manual_seed(self.seed)
+    def split_or_read_pkls(self, dataset_path: str, split_proportions: Tuple[float, float, float]):
+        if self.args.data_split_json_path is not None:
+            with open(self.args.data_split_json_path, "r") as f:
+                splits = json.load(f)
+                train_pkls = splits["splits"]["train"]
+                eval_pkls = splits["splits"]["eval"]
+                test_pkls = splits["splits"]["test"]
+        else:
+            split_path = f"{self.output_folder}/data_split.json"
+            pattern = "_raw.pkl.gz" if not self.use_sparse_dataset else "_sparse.pkl.gz"
+            with self.accelerator.main_process_first():
+                if not os.path.exists(split_path):
+                    generator = torch.Generator().manual_seed(self.seed)
 
-                # get all pkl paths
-                pkl_paths = glob.glob(dataset_path)
+                    # get all pkl paths
+                    pkl_paths = glob.glob(dataset_path)
 
-                # group pkl paths by the same molecule
-                pkl_by_mol = group_pkl_by_mol(pkl_paths, pattern)
-                pkl_keys = list(pkl_by_mol.keys())
+                    # group pkl paths by the same molecule
+                    pkl_by_mol = group_pkl_by_mol(pkl_paths, pattern)
+                    pkl_keys = list(pkl_by_mol.keys())
 
-                # get random indices
-                random_indices = torch.randperm(
-                    len(pkl_keys), generator=generator
-                ).tolist()
+                    # get random indices
+                    random_indices = torch.randperm(len(pkl_keys), generator=generator).tolist()
 
-                # split training, developing, and testing datasets
-                lengths = [int(p * len(pkl_keys)) for p in split_proportions]
-                lengths[-1] = len(pkl_keys) - sum(lengths[:-1])
-                cumu_lengths = np.cumsum(lengths)
+                    # split training, developing, and testing datasets
+                    lengths = [int(p * len(pkl_keys)) for p in split_proportions]
+                    lengths[-1] = len(pkl_keys) - sum(lengths[:-1])
+                    cumu_lengths = np.cumsum(lengths)
 
-                train_pkls = sum(
-                    [
-                        pkl_by_mol[pkl_keys[i]]
-                        for i in random_indices[: cumu_lengths[0]]
-                    ],
-                    [],
-                )
-                eval_pkls = sum(
-                    [
-                        pkl_by_mol[pkl_keys[i]]
-                        for i in random_indices[cumu_lengths[0] : cumu_lengths[1]]
-                    ],
-                    [],
-                )
-                test_pkls = sum(
-                    [
-                        pkl_by_mol[pkl_keys[i]]
-                        for i in random_indices[cumu_lengths[1] : cumu_lengths[2]]
-                    ],
-                    [],
-                )
-
-                # filter pkl paths
-                if self.pkl_filter:
-                    train_pkls = [p for p in train_pkls if self.pkl_filter in p]
-                    eval_pkls = [p for p in eval_pkls if self.pkl_filter in p]
-                    test_pkls = [p for p in test_pkls if self.pkl_filter in p]
-
-                print(
-                    "mol statistics:",
-                    f"total: {len(pkl_by_mol)}, split: {lengths}",
-                )
-                print(
-                    "pkl statistics:",
-                    f"train: {len(train_pkls)}, eval: {len(eval_pkls)}, test: {len(test_pkls)}",
-                )
-
-                # save the split information
-                with open(split_path, "w") as f:
-                    json.dump(
-                        {
-                            "splits": {
-                                "train": train_pkls,
-                                "eval": eval_pkls,
-                                "test": test_pkls,
-                            },
-                            "meta_data": {
-                                "total": len(pkl_by_mol),
-                                "split": lengths,
-                                "seed": self.seed,
-                                "train_num": len(train_pkls),
-                                "eval_num": len(eval_pkls),
-                                "test_num": len(test_pkls),
-                            },
-                        },
-                        f,
-                        indent=4,
+                    train_pkls = sum(
+                        [pkl_by_mol[pkl_keys[i]] for i in random_indices[: cumu_lengths[0]]],
+                        [],
                     )
-            else:
-                with open(split_path, "r") as f:
-                    splits = json.load(f)
-                    train_pkls = splits["splits"]["train"]
-                    eval_pkls = splits["splits"]["eval"]
-                    test_pkls = splits["splits"]["test"]
+                    eval_pkls = sum(
+                        [
+                            pkl_by_mol[pkl_keys[i]]
+                            for i in random_indices[cumu_lengths[0] : cumu_lengths[1]]
+                        ],
+                        [],
+                    )
+                    test_pkls = sum(
+                        [
+                            pkl_by_mol[pkl_keys[i]]
+                            for i in random_indices[cumu_lengths[1] : cumu_lengths[2]]
+                        ],
+                        [],
+                    )
+
+                    # filter pkl paths
+                    if self.pkl_filter:
+                        train_pkls = [p for p in train_pkls if self.pkl_filter in p]
+                        eval_pkls = [p for p in eval_pkls if self.pkl_filter in p]
+                        test_pkls = [p for p in test_pkls if self.pkl_filter in p]
+
+                    print(
+                        "mol statistics:",
+                        f"total: {len(pkl_by_mol)}, split: {lengths}",
+                    )
+                    print(
+                        "pkl statistics:",
+                        f"train: {len(train_pkls)}, eval: {len(eval_pkls)}, test: {len(test_pkls)}",
+                    )
+
+                    # save the split information
+                    with open(split_path, "w") as f:
+                        json.dump(
+                            {
+                                "splits": {
+                                    "train": train_pkls,
+                                    "eval": eval_pkls,
+                                    "test": test_pkls,
+                                },
+                                "meta_data": {
+                                    "total": len(pkl_by_mol),
+                                    "split": lengths,
+                                    "seed": self.seed,
+                                    "train_num": len(train_pkls),
+                                    "eval_num": len(eval_pkls),
+                                    "test_num": len(test_pkls),
+                                },
+                            },
+                            f,
+                            indent=4,
+                        )
+                else:
+                    with open(split_path, "r") as f:
+                        splits = json.load(f)
+                        train_pkls = splits["splits"]["train"]
+                        eval_pkls = splits["splits"]["eval"]
+                        test_pkls = splits["splits"]["test"]
 
         return train_pkls, eval_pkls, test_pkls
 
@@ -1849,9 +1794,7 @@ class AccelerateVoxelEPB3dEnergyTrainer(AccelerateEPB3dEnergyTrainer):
         patch_size: int,
         split_proportions: Tuple[float, float, float],
     ):
-        train_pkls, eval_pkls, test_pkls = self.split_or_read_pkls(
-            dataset_path, split_proportions
-        )
+        train_pkls, eval_pkls, test_pkls = self.split_or_read_pkls(dataset_path, split_proportions)
         dataset_class = (
             VoxelImage3dEnergyDataset
             if not self.use_sparse_dataset
@@ -1919,9 +1862,7 @@ class AccelerateAtomicEPB3dEnergyTrainer(AccelerateVoxelEPB3dEnergyTrainer):
         patch_size: int,
         split_proportions: Tuple[float, float, float],
     ):
-        train_pkls, eval_pkls, test_pkls = self.split_or_read_pkls(
-            dataset_path, split_proportions
-        )
+        train_pkls, eval_pkls, test_pkls = self.split_or_read_pkls(dataset_path, split_proportions)
         dataset_class = VoxelImage3dEnergySparseAtomicDataset
         eval_dataset_class = VoxelImage3dEnergySparseAtomicDatasetForFullyConverage
 
@@ -1972,9 +1913,7 @@ class AccelerateAtomicEPB3dEnergyTrainer(AccelerateVoxelEPB3dEnergyTrainer):
             raise ValueError(
                 "The boundary feature creation should be the same in both training and evaluation datasets."
             )
-        create_boundary_feature = (
-            self.args.train_dataset_extra_config.create_boundary_features
-        )
+        create_boundary_feature = self.args.train_dataset_extra_config.create_boundary_features
         collate_fn = AtomicDataCollator(create_boundary_feature)
 
         return train_dataset, eval_dataset, test_dataset, collate_fn
@@ -2047,10 +1986,8 @@ class AccelerateAtomicEPB3dEnergyTrainer(AccelerateVoxelEPB3dEnergyTrainer):
                 # Synchronize predictions across processes
                 # need to truncate with the sample number, since `gather` will Accelerate will add samples to make sure each
                 # process gets the same batch size. See: https://github.com/huggingface/accelerate/blob/main/examples/by_feature/multi_process_metrics.py
-                pred_epb, epb_label, execution_time, total_atom_num = (
-                    self.accelerator.gather(
-                        (pred_epb, epb_label, execution_time, total_atom_num)
-                    )
+                pred_epb, epb_label, execution_time, total_atom_num = self.accelerator.gather(
+                    (pred_epb, epb_label, execution_time, total_atom_num)
                 )
 
                 # Then see if we're on the last batch of our eval dataloader
@@ -2100,15 +2037,11 @@ class AccelerateAtomicEPB3dEnergyTrainer(AccelerateVoxelEPB3dEnergyTrainer):
                 raise ValueError(
                     "When is_atom_wise_potential_trained is True, pred_per_epb must be provided."
                 )
-            epb_criterion = nn.SmoothL1Loss(
-                reduction="none", beta=self.args.smooth_l1_loss_beta
-            )
+            epb_criterion = nn.SmoothL1Loss(reduction="none", beta=self.args.smooth_l1_loss_beta)
             per_epb_loss = epb_criterion(pred_per_epb, potential)
             atom_bool_mask = atom_mask > 0
             epb_loss = (
-                torch.sum(
-                    per_epb_loss * torch.abs(atom_charge) * atom_bool_mask.float()
-                )
+                torch.sum(per_epb_loss * torch.abs(atom_charge) * atom_bool_mask.float())
                 / atom_mask.sum()
             )
         else:
@@ -2179,9 +2112,7 @@ class AccelerateAtomicEPB3dEnergyTrainer(AccelerateVoxelEPB3dEnergyTrainer):
                 if (accum_step + 1) % self.gradient_accumulation_steps == 0:
                     pbar.set_description(f"loss: {loss.item():.4f}")
                     self.log(loss_dict, section="train")
-                    if self.step != 0 and divisible_by(
-                        self.step, self.save_and_eval_every
-                    ):
+                    if self.step != 0 and divisible_by(self.step, self.save_and_eval_every):
                         scores, _ = self.eval_during_training()
                         self.log(scores, section="eval")
                         self.accelerator.print("eval score:", scores)

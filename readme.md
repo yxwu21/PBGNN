@@ -18,17 +18,23 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 To enable better reproducibility, we have provided preprocessed data files for the AMBER/PBSA and PBSMALL datasets. You can access the preprocessed datasets via [Zenodo](https://doi.org/10.5281/zenodo.15867553).
 
-## Training and Testing
+## Testing and Training
 
-To train and test PBGNN on the AMBER/PBSA dataset, run:
+To test PBGNN on the AMBER/PBSA and PBSMALL dataset, please run
+
+```bash
+# testing
+sh scripts/3d/bash/test.sh
+```
+where we have provided two model checkpoints.
+
+To train PBGNN on the custom dataset, please run
 
 ```bash
 # training
 sh scripts/3d/bash/train.sh
-
-# testing
-sh scripts/3d/bash/test.sh
 ```
+
 One is able to modify the predefined configurations by running
 
 ```bash
