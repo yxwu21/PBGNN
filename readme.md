@@ -18,12 +18,30 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 To enable better reproducibility, we have provided preprocessed data files for the AMBER/PBSA and PBSMALL datasets. You can access the preprocessed datasets via [Zenodo](https://doi.org/10.5281/zenodo.15867553).
 
+After downloading the dataset, put it under the `datasets` folder.
+
+```bash
+mkdir -p datasets
+cd datasets && wget https://zenodo.org/records/15867553/files/Archive.zip?download=1
+```
+
+## Wandb
+
+We use Wandb to record the experiment progress. Please visit [wandb](https://wandb.ai/) to create an account and set up
+a project space for pbgnn. Please update your wandb information into the `env.toml` file.
+
+## Slurm
+
+All jobs are using slurm to execute. Please set up your slurm infomation in the `env.toml` file. Please also update the
+project path, which should be set up as your absolute path to the pbgnn project.
+
 ## Testing and Training
 
 To test PBGNN on the AMBER/PBSA and PBSMALL dataset, please run
 
 ```bash
 # testing
+mkdir -p outputs
 sh scripts/3d/bash/test.sh
 ```
 where we have provided two model checkpoints.
@@ -32,6 +50,7 @@ To train PBGNN on the custom dataset, please run
 
 ```bash
 # training
+mkdir -p outputs
 sh scripts/3d/bash/train.sh
 ```
 
