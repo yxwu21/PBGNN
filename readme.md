@@ -33,6 +33,7 @@ After downloading the dataset, put it under the `datasets` folder.
 ```bash
 mkdir -p datasets
 cd datasets && wget https://zenodo.org/records/15867553/files/Archive.zip?download=1
+unzip Archive.zip
 ```
 
 ## Wandb
