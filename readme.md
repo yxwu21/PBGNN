@@ -7,6 +7,10 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 ## Dependencies
 
+### Miniconda
+
+We leverage miniconda as the virtual enviroment manager for python project. Please go to [miniconda installation](https://www.anaconda.com/docs/getting-started/miniconda/install#linux-terminal-installer) to install it in your system.
+
 ### Requirements
 
 - Python >= 3.9
