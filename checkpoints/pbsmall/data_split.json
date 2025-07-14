@@ -818,16 +818,5 @@
             "datasets/pbsmall/cho186.mol2/cho186.mol2_sparse.pkl.gz",
             "datasets/pbsmall/chf101.mol2/chf101.mol2_sparse.pkl.gz"
         ]
-    },
-    "meta_data": {
-        "total": 812,
-        "split": [
-            568,
-            81,
-            163
-        ],
-        "train_num": 568,
-        "eval_num": 81,
-        "test_num": 163
     }
 }

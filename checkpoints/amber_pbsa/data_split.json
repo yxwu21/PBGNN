@@ -1228,16 +1228,5 @@
             "datasets/amber_pbsa/protein_test/2ncm_0/2ncm_0_sparse.pkl.gz",
             "datasets/amber_pbsa/protein_test/1f53_A/1f53_A_sparse.pkl.gz"
         ]
-    },
-    "meta_data": {
-        "total": 1222,
-        "split": [
-            859,
-            122,
-            241
-        ],
-        "train_num": 859,
-        "eval_num": 122,
-        "test_num": 241
     }
 }
