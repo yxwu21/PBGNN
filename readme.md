@@ -11,9 +11,16 @@ This repository implements **PBGNN**, including data preprocessing, loading, mod
 
 We leverage miniconda as the virtual enviroment manager for python project. Please go to [miniconda installation](https://www.anaconda.com/docs/getting-started/miniconda/install#linux-terminal-installer) to install it in your system.
 
+Once the miniconda is installed, please create a new enviroment for pbgnn by
+
+```bash
+conda create -n pbgnn python=3.9
+```
+
 ### Requirements
 
 - Python >= 3.9
+- Make sure you are in the newly created enviroment `conda activate pbgnn`
 - Install the `slurm` plugin via `pip install wheel/nntool-1.6.2-py3-none-any.whl`
 - Install the `pbgnn` package via `pip install -e .`
 - Set up the `wandb` and `slurm` fields in the `env.toml` file
