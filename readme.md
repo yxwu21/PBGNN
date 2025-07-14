@@ -20,9 +20,8 @@ conda create -n pbgnn python=3.9
 ### Requirements
 
 - Make sure you are in the newly created enviroment `conda activate pbgnn`
-- Install the `slurm` plugin via `pip install wheel/nntool-1.6.2-py3-none-any.whl`
 - Install the `pbgnn` package via `pip install -e .`
-- Set up the `wandb` and `slurm` fields in the `env.toml` file
+- Set up the `wandb` and `slurm` fields in the `env.toml` file (See Wandb and Slurm sections)
 
 ## Datasets
 
