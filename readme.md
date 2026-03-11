@@ -4,6 +4,21 @@
 
 This repository implements **PBGNN**, including data preprocessing, loading, model training, and evaluation. The code is written in Python using PyTorch, enabling rapid prototyping and experimentation.
 
+If you use this code, please cite the paper using the BibTeX reference below.
+
+```bibtex
+@article{wu2025end,
+  title={End-to-End Modeling of Reaction Field Energy Using Data-Driven Geometric Graph Neural Networks},
+  author={Wu, Yongxian and Zhu, Qiang and Luo, Ray},
+  journal={Journal of chemical theory and computation},
+  volume={21},
+  number={19},
+  pages={9710--9725},
+  year={2025},
+  publisher={ACS Publications}
+}
+```
+
 
 ## Dependencies
 
